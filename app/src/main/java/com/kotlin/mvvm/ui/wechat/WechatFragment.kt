@@ -53,6 +53,7 @@ class WechatFragment : BaseFragment(), ScrollToTop {
                 tab.text = mTitles[position]
             }
         tabLayoutMediator.attach()
+
     }
 
     override fun initData() {
@@ -64,5 +65,5 @@ class WechatFragment : BaseFragment(), ScrollToTop {
         if (fragment is ScrollToTop) {
             fragment.scrollToTop()
         }
-    }
+     }
 }

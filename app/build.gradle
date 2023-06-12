@@ -6,7 +6,7 @@
 }
 
 android {
-    compileSdk libs.versions.compilesdk.get().toInteger()
+    compileSdk 31
 
     defaultConfig {
         applicationId "com.kotlin.mvvm"

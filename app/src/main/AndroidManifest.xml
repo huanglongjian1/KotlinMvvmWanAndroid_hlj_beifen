@@ -72,6 +72,7 @@
             android:name=".ui.MainActivity"
             android:exported="false"
             android:launchMode="singleTask" />
+        <activity android:name=".ui.test.TestActivity" />
     </application>
 
 </manifest>

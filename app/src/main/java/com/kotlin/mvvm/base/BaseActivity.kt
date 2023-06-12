@@ -72,6 +72,7 @@ abstract class BaseActivity : AppCompatActivity(), CustomAdapt, BaseView {
         initImmersionBar()
         initView(intent.extras)
         ToastUtils.getDefaultMaker().setGravity(Gravity.CENTER, 0, 0)
+        Loge.e(this.javaClass.simpleName)
     }
 
     /**
@@ -88,14 +89,17 @@ abstract class BaseActivity : AppCompatActivity(), CustomAdapt, BaseView {
                             dismissLoadView()
                             showContent()
                         }
+
                         LoadError -> {
                             dismissLoadView()
                             showEmpty()
                         }
+
                         LoadComplete -> {
                             dismissLoadView()
                             showContent()
                         }
+
                         LoadDefault -> {}
                     }
                 }
@@ -109,7 +113,10 @@ abstract class BaseActivity : AppCompatActivity(), CustomAdapt, BaseView {
      * @param view 替换视图
      */
     fun setLoadSir(view: View) {
-        mLoadService = LoadSir.getDefault().register(view) { onReloadClick() }
+        mLoadService = LoadSir.getDefault().register(view) {
+            Loge.e("loadSir-------")
+            onReloadClick()
+        }
     }
 
     /**

@@ -36,11 +36,17 @@ class SearchHistoryFragment : BaseFragment() {
             deleteSearchHistoryData(it)
             mAdapter.setList(getSearchHistoryData())
         }
-        mAdapter.setOnSearchListener { mViewModel.responseSearch(it) }
-        mViewModel.mHotKeyBean.observe(this){
+        mAdapter.setOnSearchListener {
+            mViewModel.responseSearch(it)
+        }
+        mViewModel.mHotKeyBean.observe(this) {
             val adapter = object : TagAdapter<HotKeyBean>(it) {
                 override fun getView(parent: FlowLayout?, position: Int, t: HotKeyBean): View {
-                    val binding = FragmentSystemItemTwoFlowBinding.inflate(LayoutInflater.from(context), parent, false)
+                    val binding = FragmentSystemItemTwoFlowBinding.inflate(
+                        LayoutInflater.from(context),
+                        parent,
+                        false
+                    )
                     binding.tvContent.text = t.name
                     return binding.root
                 }

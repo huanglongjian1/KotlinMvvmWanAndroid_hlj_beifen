@@ -14,6 +14,7 @@ import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.mvvm.R
 import com.kotlin.mvvm.base.BaseActivity
+import com.kotlin.mvvm.base.Loge
 import com.kotlin.mvvm.databinding.ActivitySettingBinding
 import com.kotlin.mvvm.ext.*
 
@@ -29,7 +30,8 @@ class SettingActivity : BaseActivity(), ColorChooserDialog.ColorCallback {
         setThemeColor()
         supportActionBar?.title = StringUtils.getString(R.string.action_setting)
         binding.checkbox.isChecked = getNavBar()
-        binding.tvVersionText.text = getString(R.string.current_version, AppUtils.getAppVersionName())
+        binding.tvVersionText.text =
+            getString(R.string.current_version, AppUtils.getAppVersionName())
         binding.llTheme.onClick {
             ColorChooserDialog.Builder(this, R.string.choose_theme_color)
                 .backButton(R.string.back)
@@ -68,11 +70,16 @@ class SettingActivity : BaseActivity(), ColorChooserDialog.ColorCallback {
     @SuppressLint("RestrictedApi")
     override fun initData() {
         setToolbarBackColor(this, binding.toolbar, null)
-        binding.tvDarkMode.text = if (getNightMode()) {
+        Loge.e(getNightMode().toString())
+
+        binding.tvDarkMode.text = if (getNightMode()){
             StringUtils.getString(R.string.standard_mode)
-        } else {
+        }
+        else{
             StringUtils.getString(R.string.dark_mode)
         }
+
+
         binding.checkbox.supportButtonTintList = ColorStateList.valueOf(getThemeTextColor())
         binding.tvVersion.setTextColor(getThemeTextColor())
     }

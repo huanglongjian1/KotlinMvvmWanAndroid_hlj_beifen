@@ -8,6 +8,7 @@ import com.kotlin.mvvm.base.BaseFragment
 import com.kotlin.mvvm.common.ScrollToTop
 import com.kotlin.mvvm.databinding.FragmentSystemBinding
 import com.kotlin.mvvm.ext.setTaLayoutViewTextColor
+import com.kotlin.mvvm.ui.system.testfragment01.TestFragment01
 
 /**
  * description:
@@ -22,10 +23,12 @@ class SystemFragment : BaseFragment(), ScrollToTop {
     private val mFragments = arrayListOf<Fragment>().apply {
         add(SystemOneFragment())
         add(SystemTwoFragment())
+        add(TestFragment01())
     }
     private val mTitles = arrayListOf<String>().apply {
         add("体系")
         add("导航")
+        add("test")
     }
 
     override fun getContentView() = binding.root

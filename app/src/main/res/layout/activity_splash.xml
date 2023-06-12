@@ -6,5 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".ui.SplashActivity">
 
+    <TextView
+        android:id="@+id/splash_tv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="splash_tv"
+        android:textColor="@color/accent_red"
+        android:textSize="30sp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

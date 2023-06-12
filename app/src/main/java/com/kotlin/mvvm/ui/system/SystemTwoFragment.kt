@@ -3,10 +3,12 @@ package com.kotlin.mvvm.ui.system
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.kotlin.mvvm.base.BaseFragment
+import com.kotlin.mvvm.base.Loge
 import com.kotlin.mvvm.common.ScrollToTop
 import com.kotlin.mvvm.databinding.FragmentSystemTwoBinding
 import com.kotlin.mvvm.ext.setLinearLayoutManager
@@ -15,6 +17,11 @@ import com.kotlin.mvvm.ui.system.bean.NaviBean
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
 
 /**
  * description:
@@ -40,56 +47,84 @@ class SystemTwoFragment : BaseFragment(), ScrollToTop {
         mViewModel.mNaviBean.observe(this) {
             if (it.isNotEmpty()) {
                 mArticle.clear()
-                Observable.fromIterable(it).subscribe(object : Observer<NaviBean> {
-                    override fun onSubscribe(d: Disposable) {
+//                Observable.fromIterable(it).subscribe(object : Observer<NaviBean> {
+//                    override fun onSubscribe(d: Disposable) {
+//
+//                    }
+//
+//                    override fun onNext(t: NaviBean) {
+//                        t.check = false
+//                        mArticle.addAll(t.articles)
+//                    }
+//
+//                    override fun onError(e: Throwable) {
+//
+//                    }
+//
+//                    override fun onComplete() {
+//                        it[0].check = true
+//                        mTitleAdapter.setList(it)
+//                        mAdapter.setList(it)
+//                        showContent()
+//                    }
+//                })
 
-                    }
+                it.asFlow().map { naviBean ->
+                    naviBean.check = false
+                    mArticle.addAll(naviBean.articles)
+                }.onCompletion {_->
 
-                    override fun onNext(t: NaviBean) {
-                        t.check = false
-                        mArticle.addAll(t.articles)
-                    }
+                    it[0].check = true
+                    mTitleAdapter.setList(it)
+                    mAdapter.setList(it)
+                    showContent()
 
-                    override fun onError(e: Throwable) {
+                }.launchIn(lifecycleScope)
 
-                    }
-
-                    override fun onComplete() {
-                        it[0].check = true
-                        mTitleAdapter.setList(it)
-                        mAdapter.setList(it)
-                        showContent()
-                    }
-                })
             }
         }
         mTitleAdapter.setOnItemClickListener { _, _, position ->
-            Observable.fromIterable(mTitleAdapter.data)
-                .subscribe(object : Observer<NaviBean> {
-                    override fun onSubscribe(d: Disposable) {
+//            Observable.fromIterable(mTitleAdapter.data)
+//                .subscribe(object : Observer<NaviBean> {
+//                    override fun onSubscribe(d: Disposable) {
+//
+//                    }
+//
+//                    override fun onNext(t: NaviBean) {
+//                        t.check = false
+//                    }
+//
+//                    override fun onError(e: Throwable) {
+//
+//                    }
+//
+//                    @SuppressLint("NotifyDataSetChanged")
+//                    override fun onComplete() {
+//                        mTitleAdapter.data[position].check = true
+//                        mTitleAdapter.notifyDataSetChanged()
+//                        // 以下方法都可以
+//                        val layoutManager =
+//                            binding.recyclerView.layoutManager as LinearLayoutManager
+//                        layoutManager.scrollToPositionWithOffset(position, 0)
+////                        binding.recyclerView.smoothScrollToStartPosition(position)
+////                        binding.recyclerView.smoothScrollToPosition(position, LinearSmoothScroller.SNAP_TO_START)
+//                    }
+//                })
 
-                    }
+            mTitleAdapter.data.asFlow().map {
+                it.check = false
+            }.onCompletion {
+                Loge.e("onCompletion")
+                mTitleAdapter.data[position].check = true
+                mTitleAdapter.notifyDataSetChanged()
+                // 以下方法都可以
+                val layoutManager =
+                    binding.recyclerView.layoutManager as LinearLayoutManager
+                layoutManager.scrollToPositionWithOffset(position, 0)
 
-                    override fun onNext(t: NaviBean) {
-                        t.check = false
-                    }
+            }.launchIn(lifecycleScope)
 
-                    override fun onError(e: Throwable) {
 
-                    }
-
-                    @SuppressLint("NotifyDataSetChanged")
-                    override fun onComplete() {
-                        mTitleAdapter.data[position].check = true
-                        mTitleAdapter.notifyDataSetChanged()
-                        // 以下方法都可以
-                        val layoutManager =
-                            binding.recyclerView.layoutManager as LinearLayoutManager
-                        layoutManager.scrollToPositionWithOffset(position, 0)
-//                        binding.recyclerView.smoothScrollToStartPosition(position)
-//                        binding.recyclerView.smoothScrollToPosition(position, LinearSmoothScroller.SNAP_TO_START)
-                    }
-                })
         }
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             @SuppressLint("NotifyDataSetChanged")
@@ -106,9 +141,9 @@ class SystemTwoFragment : BaseFragment(), ScrollToTop {
                 val id = mArticle[index].chapterId
                 //记录外部id， 更新左侧状态栏状态
                 var position = 0
-                for (i in 0 until mTitleAdapter.data.size){
+                for (i in 0 until mTitleAdapter.data.size) {
                     mTitleAdapter.data[i].check = false
-                    if (id == mTitleAdapter.data[i].cid){
+                    if (id == mTitleAdapter.data[i].cid) {
                         position = i
                         mTitleAdapter.data[i].check = true
                     }

@@ -20,9 +20,10 @@ import com.kotlin.mvvm.ui.project.bean.ProjectPagerBean
  * @author Db_z
  * @Date 2021/12/24 10:53
  */
-class ProjectAdapter : BaseQuickAdapter<ProjectPagerBean, BaseViewHolder>(R.layout.item_project), LoadMoreModule {
+class ProjectAdapter : BaseQuickAdapter<ProjectPagerBean, BaseViewHolder>(R.layout.item_project),
+    LoadMoreModule {
 
-    private lateinit var listener: (collect: Boolean, id: Int, position: Int) -> Unit
+    private var listener: ((Boolean, Int, Int) -> Unit)? = null
 
     override fun convert(holder: BaseViewHolder, item: ProjectPagerBean) {
         val imageView = holder.getView<ImageView>(R.id.image)
@@ -43,12 +44,12 @@ class ProjectAdapter : BaseQuickAdapter<ProjectPagerBean, BaseViewHolder>(R.layo
         holder.itemView.onClick { startWebViewActivity(item.id, item.link, item.title) }
         holder.getView<AppCompatImageView>(R.id.iv_collection).onClick {
             checkLogin {
-                listener.invoke(item.collect, item.id, getItemPosition(item))
+                listener?.invoke(item.collect, item.id, getItemPosition(item))
             }
         }
     }
 
     fun setCollectionListener(listener: (collect: Boolean, id: Int, position: Int) -> Unit) {
-        this.listener = listener
+         this.listener = listener
     }
 }

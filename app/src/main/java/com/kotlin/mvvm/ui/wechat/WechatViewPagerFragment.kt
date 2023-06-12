@@ -7,6 +7,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.kotlin.mvvm.R
 import com.kotlin.mvvm.base.BaseFragment
+import com.kotlin.mvvm.base.Loge
 import com.kotlin.mvvm.common.ScrollToTop
 import com.kotlin.mvvm.common.handler_code_collect
 import com.kotlin.mvvm.common.handler_code_un_collect
@@ -43,7 +44,7 @@ class WechatViewPagerFragment : BaseFragment(), ScrollToTop {
 
     override fun initView(bundle: Bundle?) {
         id = bundle?.getInt("id", 0)
-        setLoadSir(binding.refreshLayout)
+        //  setLoadSir(binding.refreshLayout)
         binding.recyclerView.setLinearLayoutManager(mAdapter)
         mAdapter.isAnimationFirstOnly = true
         mAdapter.setAnimationWithDefault(BaseQuickAdapter.AnimationType.ScaleIn)
@@ -56,6 +57,11 @@ class WechatViewPagerFragment : BaseFragment(), ScrollToTop {
             page++
             mViewModel.getUserWechatArticleJson(id, page)
         }
+        mViewModel.mApiException.observe(this) {
+            binding.refreshLayout.finishRefresh()
+            Loge.e(it.message+":"+it.errCode)
+        }
+
         mAdapter.setCollectionListener { collect, id, position ->
             this.position = position
             if (collect) {
@@ -66,7 +72,7 @@ class WechatViewPagerFragment : BaseFragment(), ScrollToTop {
         }
         mViewModel.mWechatPagerBean.observe(this) {
             if (it.curPage == 1) {
-                if (it.datas.isEmpty()){
+                if (it.datas.isEmpty()) {
                     showEmpty()
                 } else {
                     mAdapter.setList(it.datas)
@@ -88,6 +94,7 @@ class WechatViewPagerFragment : BaseFragment(), ScrollToTop {
                     mAdapter.data[position].collect = true
                     ToastUtils.showShort(StringUtils.getString(R.string.collect_success))
                 }
+
                 handler_code_un_collect -> {
                     mAdapter.data[position].collect = false
                     ToastUtils.showShort(StringUtils.getString(R.string.cancel_collect))

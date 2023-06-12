@@ -7,6 +7,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.kotlin.mvvm.R
 import com.kotlin.mvvm.base.BaseActivity
+import com.kotlin.mvvm.base.Loge
 import com.kotlin.mvvm.common.handler_code_collect
 import com.kotlin.mvvm.common.handler_code_un_collect
 import com.kotlin.mvvm.databinding.ActivityCollectBinding
@@ -50,6 +51,7 @@ class CollectActivity : BaseActivity() {
             }
         }
         mViewModel.mCollectBean.observe(this) {
+            if (it == null) return@observe
             for (data in it.datas) {
                 data.collect = true
             }
@@ -75,6 +77,7 @@ class CollectActivity : BaseActivity() {
                     mAdapter.data[position].collect = true
                     ToastUtils.showShort(StringUtils.getString(R.string.collect_success))
                 }
+
                 handler_code_un_collect -> {
                     mAdapter.data[position].collect = false
                     ToastUtils.showShort(StringUtils.getString(R.string.cancel_collect))

@@ -1,6 +1,7 @@
 package com.kotlin.mvvm.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -33,6 +34,10 @@ class HomeFragment : BaseFragment(), ScrollToTop {
     private var position = 0
 
     override fun getContentView() = binding.root
+    override fun onReloadClick() {
+        super.onReloadClick()
+        Log.e("aaaaa", "点击生效")
+    }
 
     override fun initView(bundle: Bundle?) {
         setLoadSir(binding.refreshLayout)
@@ -70,7 +75,7 @@ class HomeFragment : BaseFragment(), ScrollToTop {
             }
             mDataBeans.observe(this@HomeFragment) {
                 if (it.curPage == 1) {
-                    if (it.datas.isEmpty()){
+                    if (it.datas.isEmpty()) {
                         showEmpty()
                     } else {
                         mAdapter.setList(it.datas)
@@ -92,6 +97,7 @@ class HomeFragment : BaseFragment(), ScrollToTop {
                         mAdapter.data[position].collect = true
                         ToastUtils.showShort(StringUtils.getString(R.string.collect_success))
                     }
+
                     handler_code_un_collect -> {
                         mAdapter.data[position].collect = false
                         ToastUtils.showShort(StringUtils.getString(R.string.cancel_collect))
@@ -99,6 +105,7 @@ class HomeFragment : BaseFragment(), ScrollToTop {
                 }
                 mAdapter.notifyItemChanged(position + mAdapter.headerLayoutCount)
             }
+            
         }
     }
 

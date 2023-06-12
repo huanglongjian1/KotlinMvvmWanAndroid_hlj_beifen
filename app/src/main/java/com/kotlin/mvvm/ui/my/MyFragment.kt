@@ -20,6 +20,7 @@ import com.kotlin.mvvm.databinding.FragmentMyBinding
 import com.kotlin.mvvm.databinding.LayoutEmptyRecyclerBinding
 import com.kotlin.mvvm.ext.*
 import com.kotlin.mvvm.ui.MainActivity
+import com.kotlin.mvvm.ui.test.TestActivity
 import com.kotlin.mvvm.ui.collect.CollectActivity
 import com.kotlin.mvvm.ui.integral.IntegralRankActivity
 import com.kotlin.mvvm.ui.integral.MyIntegralActivity
@@ -74,8 +75,14 @@ class MyFragment : BaseFragment(), ScrollToTop {
             binding.tvMyIntegralRanking,
             binding.clQuestionsAndAnswers
         )
+
+
+        binding.tvUserId.setOnClickListener {
+            ActivityUtils.startActivity(TestActivity::class.java)
+        }
     }
 
+    var index = 0
     private fun observeEvent() {
         mViewModel.handlerCode.observe(this) { initRvOption(it) }
         mViewModel.mWendBean.observe(this) {
@@ -91,6 +98,7 @@ class MyFragment : BaseFragment(), ScrollToTop {
                     mAdapter.data[position].collect = true
                     ToastUtils.showShort(StringUtils.getString(R.string.collect_success))
                 }
+
                 handler_code_un_collect -> {
                     mAdapter.data[position].collect = false
                     ToastUtils.showShort(StringUtils.getString(R.string.cancel_collect))
@@ -145,9 +153,11 @@ class MyFragment : BaseFragment(), ScrollToTop {
             R.id.tv_my_integral -> checkLogin {
                 ActivityUtils.startActivity(MyIntegralActivity::class.java)
             }
+
             R.id.tv_my_integral_ranking -> checkLogin {
                 ActivityUtils.startActivity(IntegralRankActivity::class.java)
             }
+
             R.id.cl_questions_and_answers -> ActivityUtils.startActivity(QuestionsAnswersActivity::class.java)
         }
     }
@@ -213,17 +223,20 @@ class MyFragment : BaseFragment(), ScrollToTop {
                     }
                     initData()
                 }
+
                 5 -> startWebViewActivity(
                     0,
                     StringUtils.getString(R.string.wan_android_tools),
                     StringUtils.getString(R.string.my_tool)
 
                 )
+
                 6 -> startWebViewActivity(
                     0,
                     StringUtils.getString(R.string.git_url_wan_android),
                     StringUtils.getString(R.string.project_home)
                 )
+
                 7 -> ActivityUtils.startActivity(SettingActivity::class.java)
             }
         }

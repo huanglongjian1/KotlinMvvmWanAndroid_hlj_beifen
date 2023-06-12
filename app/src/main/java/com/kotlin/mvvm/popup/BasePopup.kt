@@ -36,17 +36,11 @@ open class BasePopup (context: Context) : BasePopupWindow(context) {
         return this
     }
 
-    /**
-     * 延迟关闭100毫秒
-     */
-    open fun delayDismiss() {
-        delayDismiss(100)
-    }
 
     /**
      * 延迟关闭
      */
-    open fun delayDismiss(delay: Long) {
+    open fun delayDismiss(delay: Long=100) {
         var d = delay
         if (d < 0) d = 0
         mHandler.postDelayed({

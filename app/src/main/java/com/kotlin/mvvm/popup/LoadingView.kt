@@ -20,7 +20,8 @@ class LoadingView private constructor(context: Context) : BasePopup(context){
         private var instance: LoadingView? = null
         fun getInstance(context: Context) =
             instance ?: synchronized(this) {
-                instance ?: LoadingView(context).also { instance = it }
+                instance ?: LoadingView(context).also {
+                    instance = it }
             }
     }
 

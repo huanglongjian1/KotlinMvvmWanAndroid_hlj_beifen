@@ -28,7 +28,7 @@ class SystemTwoTitleAdapter :
             R.id.tv_title, if (item.check) ContextCompat.getColor(
                 context, R.color.colorPrimary
             ) else ContextCompat.getColor(
-                context, R.color.item_chapter
+                context, R.color.accent_red
             )
         )
     }

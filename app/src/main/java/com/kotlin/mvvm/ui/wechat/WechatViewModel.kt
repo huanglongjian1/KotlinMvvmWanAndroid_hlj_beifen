@@ -7,9 +7,13 @@ import com.kotlin.mvvm.common.base.BaseListResponse
 import com.kotlin.mvvm.common.base.fold
 import com.kotlin.mvvm.common.handler_code_collect
 import com.kotlin.mvvm.common.handler_code_un_collect
+import com.kotlin.mvvm.error.ApiException
+import com.kotlin.mvvm.error.ExceptionHandler
 import com.kotlin.mvvm.network.RetrofitFactory
 import com.kotlin.mvvm.network.callRequest
+import com.kotlin.mvvm.network.callRequestTest
 import com.kotlin.mvvm.network.handlerResponse
+import com.kotlin.mvvm.network.handlerResponseTest
 import com.kotlin.mvvm.ui.wechat.bean.WechatBean
 import com.kotlin.mvvm.ui.wechat.bean.WechatPagerBean
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +30,7 @@ class WechatViewModel : BaseViewModel() {
     val mWechatBean = MutableLiveData<MutableList<WechatBean>>()
     val mWechatPagerBean = MutableLiveData<BaseListResponse<MutableList<WechatPagerBean>>>()
 
+    val mApiException = MutableLiveData<ApiException>()
     fun getWechatArticleJson() = launchUI {
         val baseResponse = withContext(Dispatchers.IO) {
             callRequest {
@@ -41,8 +46,8 @@ class WechatViewModel : BaseViewModel() {
 
     fun getUserWechatArticleJson(user_id: Int?, page: Int) = launchUI {
         val baseResponse = withContext(Dispatchers.IO) {
-            callRequest {
-                handlerResponse(
+            callRequestTest {
+                handlerResponseTest(
                     RetrofitFactory.instance.service.getUserWechatArticleJson(
                         user_id,
                         page
@@ -54,6 +59,7 @@ class WechatViewModel : BaseViewModel() {
             mWechatPagerBean.value = it
         }, {
             ToastUtils.showShort(it.message)
+            mApiException.value=ExceptionHandler.handleException(it)
         })
     }
 

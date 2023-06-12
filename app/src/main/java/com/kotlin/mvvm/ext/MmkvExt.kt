@@ -68,7 +68,7 @@ fun checkLogin(then: (() -> Unit)? = null) =
 fun isLogin() = !StringUtils.isEmpty(getUser()) && CookieClass.hasCookie()
 
 fun saveSearchHistoryData(words: String) {
-    if (StringUtils.isEmpty(words) || words == " ") return
+    if (StringUtils.isEmpty(words) || words.trim() == "") return
     val history = getSearchHistoryData()
     if (history.contains(words)) {
         history.remove(words)

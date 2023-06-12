@@ -2,20 +2,24 @@ package com.kotlin.mvvm.ui.search
 
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuItemCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.StringUtils
 import com.kotlin.mvvm.R
 import com.kotlin.mvvm.base.BaseActivity
+import com.kotlin.mvvm.base.Loge
 import com.kotlin.mvvm.common.ScrollToTop
 import com.kotlin.mvvm.databinding.ActivitySearchBinding
 import com.kotlin.mvvm.ext.*
@@ -37,6 +41,7 @@ class SearchActivity : BaseActivity() {
 
     override fun getContentView() = binding.root
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun initView(bundle: Bundle?) {
         setSupportActionBar(binding.toolbar)
         binding.ivClear.onClick { binding.etSearch.setText("") }
@@ -65,8 +70,18 @@ class SearchActivity : BaseActivity() {
                     false
                 }
             }
+            onFocusChangeListener =
+                View.OnFocusChangeListener { p0, p1 ->
+                    if (p1) {
+                        Loge.e("焦点")
+                        this.windowInsetsController?.show(WindowInsetsCompat.Type.ime())
+                    } else {
+                        Loge.e("失去焦点")
+                        this.windowInsetsController?.hide(WindowInsetsCompat.Type.ime())
+                    }
+                }
         }
-        mViewModel.mSearch.observe(this){
+        mViewModel.mSearch.observe(this) {
             binding.etSearch.setText(it)
             binding.etSearch.setSelection(it.length)
             saveSearchHistoryData(it)
